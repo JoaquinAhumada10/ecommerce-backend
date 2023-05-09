@@ -7,7 +7,7 @@ class ProductManager {
 
 	async getNextId() {
 		let products = await this.getProducts();
-		if (products.length === 0) {
+		if (products.length == 0) {
 			return 1;
 		}
 		let lastProduct = products[products.length - 1];
@@ -21,8 +21,13 @@ class ProductManager {
 	}
 
 	async getProducts() {
-		let contenido = await fs.promises.readFile(this.path, 'utf-8');
-		let products = JSON.parse(contenido);
+		let products;
+		try {
+			let contenido = await fs.promises.readFile(this.path, 'utf-8');
+			products = JSON.parse(contenido);
+		} catch (error) {
+			console.log(error);
+		}
 		return products;
 	}
 
@@ -86,10 +91,10 @@ let zapas3 = {
 	stock: 5,
 };
 
-// manager.addProducts(zapas3); // dejo prepaparado "zapas3" de ejemplo para que lo agregues y luego poder utilizarlo tambien con "deleteProduct"
+//manager.addProducts(zapas3); // dejo prepaparado "zapas3" de ejemplo para que lo agregues y luego poder utilizarlo tambien con "deleteProduct"
 
-// let allProducts = await manager.getProducts();
-// console.log(allProducts);
+//let allProducts = await manager.getProducts();
+//console.log(allProducts);
 
 // let product = await manager.getProductsById('1');
 // console.log(product);
@@ -99,3 +104,5 @@ let zapas3 = {
 
 // let respuesta = await manager.deleteProduct('3'); //
 // console.log(respuesta);
+
+export default ProductManager;
