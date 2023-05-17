@@ -1,25 +1,16 @@
 import express from 'express';
-import ProductManager from './ProductManager.js';
-
+import productsRouter from '../src/routes/products.js';
+import cartRouter from '../src/routes/cart.js';
 const app = express();
+
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+app.use('/api/products', productsRouter);
+app.use('/api/cart', cartRouter);
 
-const manager = new ProductManager();
-
-app.get('/', (req, res) => {
-	res.send('BigSneakers3 from Express');
-});
-
-app.get('/products', async (req, res) => {
-	let product = await manager.getProducts();
-	res.send(product);
-});
-app.get('/products/:id', async (req, res) => {
-	let id = req.params.id;
-	let product = await manager.getProductsById(id);
-	res.send(product);
-});
-
-const server = app.listen(8080, () =>
-	console.log('server running on port 8080')
+const PORT = 8080;
+const server = app.listen(PORT, () =>
+	console.log(`server running on port: ${server.address().port}`)
 );
+server.on('error', (error) => console.log(error));
