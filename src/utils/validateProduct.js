@@ -3,11 +3,11 @@ export const validateProduct = (product) => {
 	if (
 		!product.title ||
 		!product.description ||
-		!product.code ||
 		!product.price ||
+		!product.thumbnail ||
+		!product.code ||
 		!product.stock ||
-		!product.category ||
-		!product.thumbnails
+		!product.category
 	) {
 		result = false;
 	}

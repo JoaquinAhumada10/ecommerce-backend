@@ -3,34 +3,18 @@ import handlebars from 'express-handlebars';
 import productsRouter from '../src/routes/products.js';
 import cartRouter from '../src/routes/cart.js';
 import viewsRouter from '../src/routes/views.router.js';
-import { Server } from 'socket.io';
+import mongoose from 'mongoose';
+
 const app = express();
-
-const PORT = 8080;
-const httpServer = app.listen(PORT, () =>
-	console.log(`server running on port: ${httpServer.address().port}`)
+mongoose.connect(
+	'mongodb+srv://joaquinbusiness10:coder12345@cluster0.vclsyyk.mongodb.net/?retryWrites=true&w=majority'
 );
-httpServer.on('error', (error) => console.log(error));
 
-//WEB SOCKET
-const socketServer = new Server(httpServer);
-
-let productos = [];
-socketServer.on('connection', (socket) => {
-	console.log('nuevo socket creado');
-
-	socket.emit('messages', productos);
-
-	socket.on('message', (data) => {
-		productos.push(data);
-		socketServer.emit('messages', productos);
-	});
-});
+app.use(express.static('public'));
 
 //EXPRESS
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
 
 //HANDLEBARS
 app.use(viewsRouter);
@@ -41,3 +25,8 @@ app.set('view engine', 'handlebars');
 //API
 app.use('/api/products', productsRouter);
 app.use('/api/cart', cartRouter);
+
+const server = app.listen(8080, () =>
+	console.log(`Server running on port: ${server.address().port}`)
+);
+server.on('error', (error) => console.log(error));

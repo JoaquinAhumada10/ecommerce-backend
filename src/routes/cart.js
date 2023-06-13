@@ -1,17 +1,17 @@
 import { Router } from 'express';
-import CartManager from '../manager/CartManager.js';
+import CartDaoManager from '../DAO/CartDAO.js';
 const cartRouter = Router();
 
-const manager = new CartManager();
+const cartManager = new CartDaoManager();
 
 cartRouter.get('/', async (req, res) => {
-	let cart = await manager.getCarts();
-	res.send(cart);
+	let carts = await cartManager.getCarts();
+	res.send({ status: 'success', payload: carts });
 });
 
 cartRouter.get('/:id', async (req, res) => {
 	let id = req.params.id;
-	let cart = await manager.getCartsById(id);
+	let cart = await cartManager.getCartsById(id);
 	if (!cart) {
 		res.status(400).send({ status: 'error' });
 	}
@@ -19,7 +19,7 @@ cartRouter.get('/:id', async (req, res) => {
 });
 
 cartRouter.post('/', async (req, res) => {
-	let cart = await manager.createCart();
+	let cart = await cartManager.createCart();
 	res.send(cart);
 });
 
@@ -28,7 +28,7 @@ cartRouter.post('/:id/products/:pid', async (req, res) => {
 	let pid = req.params.pid;
 	const quantity = 1;
 
-	let cart = await manager.getCartsById(id);
+	let cart = await cartManager.getCartsById(id);
 	if (!cart) {
 		res.status(404).send({ error: 'Carrito no encontrado' });
 		return;
@@ -37,7 +37,7 @@ cartRouter.post('/:id/products/:pid', async (req, res) => {
 		id: pid,
 	};
 	cart.products.push({ product, quantity });
-	await manager.addProductToCart(cart);
+	await cartManager.addProductToCart(cart);
 	res.send(cart);
 });
 

@@ -1,16 +1,11 @@
-<h1>Hola {{testUser.name}}, Bienvenido!</h1>
+<h1>Catalogo</h1>
 
-<p></p>
-
-{{#if admin}}
-	{{#each products}}
-		<p>{{title}}: {{category}} :{{price}}</p>
-	{{/each}}
-
-{{else}}
-	<h3>No podes ver la lista de productos</h3>
-{{/if}}
-
-<p></p>
+<ul>
+	<li>{{title}}</li>
+	<li>{{description}}</li>
+	<li>{{price}}</li>
+	<li>{{thumbnail}}</li>
+	<li>{{code}}</li>
+</ul>
 
 <script src='js/index.js'></script>

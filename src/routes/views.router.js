@@ -1,6 +1,10 @@
 import { Router } from 'express';
 const viewsRouter = Router();
 
+viewsRouter.get('/', (req, res) => {
+	res.render('index', {});
+});
+
 viewsRouter.get('/realtimeproducts', (req, res) => {
 	let testUser = {
 		name: 'joaquin',
@@ -27,27 +31,27 @@ viewsRouter.get('/home', (req, res) => {
 	});
 });
 
-let products = [
-	{
-		title: 'air force 1 white',
-		category: 'nike',
-		price: 15000,
-	},
-	{
-		title: 'air force 1 black',
-		category: 'nike',
-		price: 15000,
-	},
-	{
-		title: 'detroit white',
-		category: 'detroit',
-		price: 15000,
-	},
-	{
-		title: 'detroit black',
-		category: 'detroit',
-		price: 15000,
-	},
-];
+// let products = [
+// 	{
+// 		title: 'air force 1 white',
+// 		category: 'nike',
+// 		price: 15000,
+// 	},
+// 	{
+// 		title: 'air force 1 black',
+// 		category: 'nike',
+// 		price: 15000,
+// 	},
+// 	{
+// 		title: 'detroit white',
+// 		category: 'detroit',
+// 		price: 15000,
+// 	},
+// 	{
+// 		title: 'detroit black',
+// 		category: 'detroit',
+// 		price: 15000,
+// 	},
+// ];
 
 export default viewsRouter;
