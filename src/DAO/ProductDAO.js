@@ -25,7 +25,9 @@ class ProductDaoManager {
 		thumbnail,
 		code,
 		stock,
-		category
+		category,
+		quantity,
+		size
 	) {
 		let products;
 		try {
@@ -37,6 +39,8 @@ class ProductDaoManager {
 				code,
 				stock,
 				category,
+				quantity,
+				size,
 			});
 		} catch (error) {
 			console.error('Ocurrió un error al agregar productos:', error);
@@ -72,15 +76,18 @@ class ProductDaoManager {
 		}
 	}
 
-	async deleteProduct(id) {
-		let products = await this.getProducts();
-		let indice = products.findIndex((product) => product.id == id);
-		let productDeleted;
-		if (indice !== -1) {
-			productDeleted = products.splice(indice, 2)[0];
+	async deleteProduct(_id) {
+		try {
+			let product = await productModel.findOneAndDelete({ _id });
+			if (product) {
+				return { msg: `Producto ${product.id} eliminado` };
+			} else {
+				return { msg: 'Producto no encontrado con ese ID' };
+			}
+		} catch (error) {
+			console.error(error);
+			return { msg: 'Ocurrió un error al eliminar el producto' };
 		}
-
-		return { msg: `Product ${productDeleted.id} deleted` };
 	}
 }
 

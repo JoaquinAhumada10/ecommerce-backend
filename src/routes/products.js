@@ -37,8 +37,17 @@ productsRouter.get('/:id', async (req, res) => {
 
 productsRouter.post('/', async (req, res) => {
 	let response;
-	let { title, description, price, thumbnail, code, stock, category } =
-		req.body;
+	let {
+		title,
+		description,
+		price,
+		thumbnail,
+		code,
+		stock,
+		category,
+		quantity,
+		size,
+	} = req.body;
 	if (
 		!title ||
 		!description ||
@@ -46,7 +55,9 @@ productsRouter.post('/', async (req, res) => {
 		!thumbnail ||
 		!code ||
 		!stock ||
-		!category
+		!category ||
+		!quantity ||
+		!size
 	)
 		return res.send({ status: 'error', error: 'incomplete values' });
 
@@ -58,7 +69,9 @@ productsRouter.post('/', async (req, res) => {
 			thumbnail,
 			code,
 			stock,
-			category
+			category,
+			quantity,
+			size
 		);
 	} catch (error) {}
 
@@ -67,8 +80,17 @@ productsRouter.post('/', async (req, res) => {
 
 productsRouter.put('/:id', async (req, res) => {
 	let pid = req.params.pid;
-	let { title, description, price, thumbnail, code, stock, category } =
-		req.body;
+	let {
+		title,
+		description,
+		price,
+		thumbnail,
+		code,
+		stock,
+		category,
+		quantity,
+		size,
+	} = req.body;
 	if (
 		!title ||
 		!description ||
@@ -76,7 +98,9 @@ productsRouter.put('/:id', async (req, res) => {
 		!thumbnail ||
 		!code ||
 		!stock ||
-		!category
+		!category ||
+		!quantity ||
+		!size
 	)
 		return res.send({ status: 'error', error: 'incomplete values' });
 	let productsUpdated;
@@ -90,6 +114,8 @@ productsRouter.put('/:id', async (req, res) => {
 			code,
 			stock,
 			category,
+			quantity,
+			size,
 		});
 	} catch (error) {
 		res.status(500).send({ status: 'error', error });
@@ -99,9 +125,13 @@ productsRouter.put('/:id', async (req, res) => {
 });
 
 productsRouter.delete('/:id', async (req, res) => {
-	let id = req.params.id;
-	let product = await productModel.deleteOne({ id: id });
-	res.send(product);
-});
+	let _id = req.params.id;
 
+	try {
+		let result = await productManager.deleteProduct(_id);
+		res.send(result);
+	} catch (error) {
+		res.status(500).send({ status: 'error', error });
+	}
+});
 export default productsRouter;

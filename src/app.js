@@ -3,7 +3,8 @@ import handlebars from 'express-handlebars';
 import productsRouter from '../src/routes/products.js';
 import cartRouter from '../src/routes/cart.js';
 import viewsRouter from '../src/routes/views.router.js';
-import mongoose from 'mongoose';
+import mongoose, { model } from 'mongoose';
+import { productModel } from './DAO/model/product.model.js';
 
 const app = express();
 mongoose.connect(
@@ -15,6 +16,27 @@ app.use(express.static('public'));
 //EXPRESS
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//MONGO
+app.get('/products', async (req, res) => {
+	const perPage = 10;
+	const page = req.query.page || 1;
+
+	let result;
+	try {
+		result = await productModel.paginate({}, { page, perPage });
+	} catch (error) {
+		console.log(error);
+	}
+	const data = {
+		products: result.docs,
+		hasPrevPage: result.hasPrevPage,
+		prevPage: result.prevPage,
+		hasNextPage: result.hasNextPage,
+		nextPage: result.nextPage,
+	};
+	res.render('products', { data });
+});
 
 //HANDLEBARS
 app.use(viewsRouter);
