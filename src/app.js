@@ -6,16 +6,42 @@ import viewsRouter from '../src/routes/views.router.js';
 import mongoose, { model } from 'mongoose';
 import { productModel } from './DAO/model/product.model.js';
 
+import session from 'express-session';
+import sessionRouter from './routes/session.js';
+import MongoStore from 'connect-mongo';
+
 const app = express();
-mongoose.connect(
-	'mongodb+srv://joaquinbusiness10:coder12345@cluster0.vclsyyk.mongodb.net/?retryWrites=true&w=majority'
-);
 
 app.use(express.static('public'));
 
-//EXPRESS
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//HANDLEBARS
+app.use(viewsRouter);
+app.engine('handlebars', handlebars.engine({}));
+app.set('views', './views');
+app.set('view engine', 'handlebars');
+
+app.use(
+	session({
+		store: MongoStore.create({
+			mongoUrl:
+				'mongodb+srv://joaquinbusiness10:coder12345@cluster0.vclsyyk.mongodb.net/session?retryWrites=true&w=majority',
+			mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+			ttl: 3600,
+		}),
+		secret: 'misecreto',
+		saveUninitialized: false,
+		resave: false,
+	})
+);
+
+app.use('/api/session', sessionRouter);
+
+// mongoose.connect(
+// 	'mongodb+srv://joaquinbusiness10:coder12345@cluster0.vclsyyk.mongodb.net/?retryWrites=true&w=majority'
+// );
 
 //MONGO
 app.get('/products', async (req, res) => {
@@ -38,15 +64,9 @@ app.get('/products', async (req, res) => {
 	res.render('products', { data });
 });
 
-//HANDLEBARS
-app.use(viewsRouter);
-app.engine('handlebars', handlebars.engine());
-app.set('views', './views');
-app.set('view engine', 'handlebars');
-
 //API
 app.use('/api/products', productsRouter);
-app.use('/api/cart', cartRouter);
+app.use('/api/carts', cartRouter);
 
 const server = app.listen(8080, () =>
 	console.log(`Server running on port: ${server.address().port}`)

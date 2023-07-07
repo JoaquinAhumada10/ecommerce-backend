@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Creando cookies</title>
+	</head>
+	<body>
+		<label for="client-name">Nombre Cliente:</label>
+		<input type="text" id="client-name" name="client-name" /><br />
+
+		<label for="client-email">Correo electrónico:</label>
+		<input type="email" id="client-email" name="client-email" /><br />
+
+		<button type="button" id="get-cookie">Obtener cookie</button>
+		<button type="button" id="create-cookie">Crear cookie</button>
+
+		<script>
+			function getCookie() {
+				fetch('get-cookie')
+					.then((response) => response.text())
+					.then((cookieValue) => console.log(cookieValue))
+					.catch((error) => console.log(error));
+			}
+
+			function createCookie() {
+				const userEmail = document.getElementById('client-email').value;
+				fetch('/create-cookie', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ userEmail: userEmail }),
+				})
+					.then((response) => response.text())
+					.then((responseText) => console.log(responseText))
+					.catch((error) => console.log(error));
+			}
+
+			document
+				.getElementById('get-cookie')
+				.addEventListener('click', getCookie);
+			document
+				.getElementById('create-cookie')
+				.addEventListener('click', createCookie);
+		</script>
+	</body>
+</html>

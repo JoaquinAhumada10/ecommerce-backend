@@ -33,26 +33,22 @@ cartRouter.post('/', async (req, res) => {
 cartRouter.post('/:id/products/:pid', async (req, res) => {
 	try {
 		let id = req.params.id;
-		let _id = req.params.pid; // Corregido: Cambiado "_id" por "pid"
+		let pid = req.params.pid;
 		const quantity = 1;
 
-		let cart = await cartManager.getCartsById(id);
+		let cart = await manager.getCartsById(id);
 		if (!cart) {
 			res.status(404).send({ error: 'Carrito no encontrado' });
 			return;
 		}
-
 		const product = {
-			id: _id,
+			id: pid,
 		};
 		cart.products.push({ product, quantity });
-
-		await cartManager.addProductToCart(_id, id); // Corregido: Cambiado el orden de los parámetros
-
+		await manager.addProductToCart(cart);
 		res.send(cart);
 	} catch (error) {
-		console.error(error);
-		res.status(500).send({ error: 'Error al agregar el producto al carrito' });
+		res.status(500).send({ error: 'Ocurrió un error en el servidor' });
 	}
 });
 

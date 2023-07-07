@@ -24,18 +24,20 @@ class CartDaoManager {
 		return cart;
 	}
 
-	async addProductToCart(_id, cid) {
+	async addProductToCart(_id, id) {
 		try {
-			let carts = await this.getCarts();
-			let index = carts.findIndex((cart) => cart.id == cid);
+			const carts = await this.getCarts();
+			const cart = carts.find((cart) => cart.id == id);
 
-			if (index == -1) {
+			if (!cart) {
 				throw new Error('Cart not found');
 			}
 
-			carts[index].products.push(_id);
+			cart.products.push({ product: _id });
 
-			return carts[index];
+			await cart.save();
+
+			return cart;
 		} catch (error) {
 			console.error(error);
 			return null;
